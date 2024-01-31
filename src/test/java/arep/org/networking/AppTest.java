@@ -1,4 +1,4 @@
-package org.example;
+package arep.org.networking;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
