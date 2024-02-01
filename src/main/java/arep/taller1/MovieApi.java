@@ -16,6 +16,12 @@ public class MovieApi {
     private static final String USER_AGENT = "Mozilla/5.0";
     private final Gson gson = new Gson();
 
+    /**
+     * Retrieves the movie information for the given movie title.
+     *
+     * @param  movieTitle  the title of the movie to retrieve information for
+     * @return             the movie information as a string
+     */
     public String getMovieInfo(String movieTitle) {
         String cacheMovieInfo = movieCache.getMovieInfo(movieTitle);
 
@@ -24,15 +30,26 @@ public class MovieApi {
         } else {
             try {
                 String movieInfo = makeApiRequest(movieTitle);
-                movieCache.addMovieToCache(movieTitle, movieInfo);
-                return movieInfo;
+                if (movieInfo != null && !movieInfo.contains("Movie not found")) {
+                    movieCache.addMovieToCache(movieTitle, movieInfo);
+                    return movieInfo;
+                } else {
+                    return "Movie not found";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-                return "Error al obtener información de la película";
+                return "Error: Unable to retrieve information from the movie";
             }
         }
     }
 
+    /**
+     * Makes an API request (GET) to retrieve movie information based on the provided movie title.
+     *
+     * @param  movieTitle  the title of the movie to retrieve information for
+     * @return             the response content from the API request
+     * @throws IOException if an error occurs while making the API request
+     */
     public String makeApiRequest(String movieTitle) throws IOException {
 
         System.out.println("Movie Title: " + movieTitle);

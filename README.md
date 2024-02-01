@@ -1,6 +1,6 @@
-# AREP - Taller 1
+# AREP - Taller 1 - Andrea Durán
 
-One Paragraph of project description goes here
+This project is a simple HTTP server application that allows users to search for information about movies using the OMDb API. The server responds to requests with details about a specific movie based on the provided movie title.
 
 ## Getting Started
 
@@ -8,80 +8,167 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+To run this project, you need to have the following installed:
 
-```
-Give examples
-```
+ - Java
+ - Maven
+ - Git
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+Follow these steps to get a development environment running:
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
+1. Clone the repository to your local machine:
 
 ```
-until finished
+git clone https://github.com/andreaduranvivas/AREP-Taller1/tree/master
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+2. Navigate to the project directory:
+
+```
+cd arep-taller1
+```
+
+3. Build the project using Maven:
+
+```
+mvn clean install
+```
+4. Now you can use your favorite IDE to review and run the project. But it can also be run from the terminal using the following command:
+
+```
+mvn exec:java
+```
+Once all the project dependencies have loaded, you can run the main method of the HttpServer class. The terminal will send a message indicating that it is ready to listen, and that way you will know that you can start testing the server. To do this, you must enter from a browser to the URL http://localhost:3500/movie, where you will find the page that allows you to search for movies and will return the data of the movie entered if it exists.
+To search, you can press the search button or press the Enter key.
+
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+To run the automated tests for this system, use the following Maven command:
+
+```
+mvn test
+```
+
 
 ### Break down into end to end tests
 
-Explain what these tests test and why
+The project includes tests to ensure the correctness and reliability of its components. Follow the instructions below to run the tests.
+
+#### HttpServer Tests
+
+The HttpServer class is responsible for handling HTTP requests and interacting with the OMDb API. To run the tests for this class, execute the following command:
 
 ```
-Give an example
+mvn test -Dtest=HttpServerTest
 ```
 
-### And coding style tests
+This command will run the unit tests for the HttpServer class. These tests validate the functionality of processing HTTP requests, extracting movie titles from URIs, and generating HTTP responses.
 
-Explain what these tests test and why
+#### MovieApi Tests
+
+The MovieApi class is responsible for interacting with the OMDb API to fetch information about movies. Run the tests for the MovieApi class with the following command:
+```
+mvn test -Dtest=MovieApiTest
+```
+These tests validate the correctness of making API requests, handling API responses, and caching movie information.
+
+
+#### MovieCache Tests
+
+The MovieCache class is responsible for caching movie information to improve performance.
+These tests cover adding and retrieving movie information from the cache, ensuring that the cache works as expected.
+
+
+## Design Overview
+
+The project consists of a simple HTTP server (HttpServer), a movie information API client (MovieApi), and a movie information cache (MovieCache). The server responds to HTTP requests related to movie information by interacting with the OMDb API through the MovieApi and caching the results using MovieCache.
+
+###  Extensibility
+
+The design is extensible as it follows the principles of modularization and separation of concerns. Each component (HttpServer, MovieApi, and MovieCache) has a specific responsibility, making it easy to extend or modify one component without affecting the others.
+
+###  Use of Patterns
+
+The project employs the following design patterns:
+
+**1. Singleton Pattern:** The MovieCache class is implemented as a singleton, ensuring that only one instance of the cache exists throughout the application. This pattern is useful for maintaining a single cache shared among different parts of the application.
+
+**2. Strategy Pattern:** The separation of the HttpServer and MovieApi components allows for flexibility in choosing or extending the movie information source. By implementing a different movie information provider and conforming to a common interface, the system can easily switch or include additional providers.
+
+**3. Three Layer Design Pattern:** The project architecture follows a three-layer design pattern, providing a clear separation of concerns and promoting modularity. The layers are:
+
+- **HTTP Server Layer (HttpServer):**
+        - Responsible for handling incoming HTTP requests.
+        - Communicates with the Movie API layer to retrieve movie information.
+        - Does not directly interact with the Movie Cache layer. 
+
+- **Movie API Layer (MovieApi):**
+        - Acts as an intermediary between the HTTP Server layer and the Movie Cache layer.
+        - Communicates with the Movie Cache to retrieve cached movie information.
+        - Communicates with external APIs (e.g., OMDb API) to fetch movie data if not found in the cache.
+
+- **Movie Cache Layer (MovieCache):**
+        - Manages the caching of movie information to improve performance.
+        - Acts as a data store for frequently requested movie details.
+        - Provides a centralized cache for both the HTTP Server and Movie API layers.
+
+###  Modularity
+
+The code is organized into distinct modules, each responsible for a specific aspect of the application:
+
+- **HttpServer:** Handles incoming HTTP requests and dispatches them based on the URI.
+- **MovieApi:** Interacts with the OMDb API to fetch movie information.
+- **MovieCache:** Caches movie information to improve performance.
+
+###  Organization
+
+The classes and methods are organized logically, providing clarity on their purpose and usage. The project follows a layered architecture with clear separation of concerns, enhancing readability and maintainability.
+
+## Extending the System
+
+### Adding a New Movie Information Provider
+
+To add a new movie information provider, follow these steps:
+
+1. Modify or extend the MovieApi class by changing the URL as required by the new service provider
+2. Change the graphical interface by extending the HttpServer class and overriding the httpMovie method. In this way, the HTML page will be changed, adapting it to the new information providers.
+
+### Enhancing the Cache
+
+To enhance the cache, consider the following:
+
+1. Improve cache eviction policies for better memory management.
+2. Implement cache expiration mechanisms to refresh information after a certain period.
+3. Extend the MovieCache class to support different storage backends (e.g., database, distributed cache) for scalability.
+
+## Documentation
+
+The project includes Javadoc documentation to provide detailed information about the classes and methods. To generate the Javadoc documentation, execute the following command:
 
 ```
-Give an example
+mvn javadoc:javadoc
 ```
+After running this command, you can find the generated Javadoc in the target/site/apidocs/ directory. Open the index.html file in a web browser to browse the documentation.
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [OMDb API](https://www.omdbapi.com/) - RESTful Web Service to Obtain Movie Information
 * [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Java](https://www.java.com/es/) - Programming Language
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+Version 1.0.0
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Andrea Durán Vivas**  [Usuario de GitHub](https://github.com/andreaduranvivas)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etcEP-Taller1
+Open Source License

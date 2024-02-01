@@ -73,8 +73,21 @@ public class HttpServer {
         serverSocket.close();
     }
 
-    private static String extractMovieTitleFromUri(String uri) {
-        return uri.substring("/movie".length()).trim();
+    /**
+     * Extracts the movie title from the given URI.
+     *
+     * @param  uri  the URI containing the movie title
+     * @return      the extracted movie title, or null if it cannot be extracted
+     */
+    public static String extractMovieTitleFromUri(String uri) {
+        String[] params = uri.split("\\?");
+        if (params.length == 2) {
+            String[] keyValue = params[1].split("=");
+            if (keyValue.length == 2 && keyValue[0].equals("movieTitle")) {
+                return keyValue[1];
+            }
+        }
+        return null;
     }
 
 
@@ -86,8 +99,11 @@ public class HttpServer {
      */
     public static String httpMovie(String uri){
 
-        String movieTitle = "Guardian";
-        String movieInfo = movieApi.getMovieInfo(movieTitle);
+        String movieTitle = extractMovieTitleFromUri(uri);
+        System.out.println("Title: " + movieTitle);
+
+        String movieData = movieApi.getMovieInfo(movieTitle);
+        System.out.println("Data: " + movieData);
 
         String outputLine = "HTTP/1.1 200 OK\r\n"
                 + "Content-Type:text/html\r\n"
@@ -135,10 +151,10 @@ public class HttpServer {
                 "    <body>\n" +
                 "        <div id=\"mainContainer\">\n" +
                 "            <h1>Search Your Favorite Movie</h1>\n" +
-                "            <form>\n" +
+                "            <form id=\"movieForm\" action=\"/movie\">\n" +
                 "                <label for=\"movieTitle\">Movie Title:</label><br>\n" +
                 "                <input type=\"text\" id=\"movieTitle\" name=\"movieTitle\"><br><br>\n" +
-                "                <input type=\"button\" value=\"Search Movie\" onclick=\"loadMovieInfo()\">\n" +
+                "                <input type=\"submit\" value=\"Search Movie\"><br><br>\n" +
                 "            </form> \n" +
                 "            <div id=\"movieContainer\">\n" +
                 "                <div id=\"posterContainer\">\n" +
@@ -146,25 +162,32 @@ public class HttpServer {
                 "                </div>\n" +
                 "                <div id=\"infoContainer\">\n" +
                 "                    <h2 id=\"movieTitle\"></h2>\n" +
-                "                    <div id=\"movieInfo\"></div>\n" +
+                "                    <div id=\"movieInfo\"> " + movieData +"</div>\n" +
                 "                </div>\n" +
                 "            </div>\n" +
                 "            <script>\n" +
-                "                const movieApi = new MovieApi();\n" +
+                "                document.getElementById('movieForm').addEventListener('submit', function(event) {\n" +
+                "                    event.preventDefault();\n" +
+                "                    loadMovieInfo();\n" +
+                "                });\n" +
                 "                function loadMovieInfo() {\n" +
                 "                    let movieTitle = document.getElementById(\"movieTitle\").value;\n" +
                 "                    document.getElementById('movieContainer').style.display = 'flex';\n" +
-                "                    movieApi.getMovieInfo(movieTitle, function(movieData) {\n" +
+                "                    const url = \"http://localhost:35000/movie${movieTitle}\";\n" +
+                "                    const xhttp = new XMLHttpRequest();\n" +
+                "                    xhttp.onload = function() {\n" +
                 "                        let movieTitleElement = document.getElementById('movieTitle');\n" +
-                "                        let movieInfoElement = document.getElementById('movieInfo');\n" +
+        "                                let movieInfoElement = document.getElementById('movieInfo');\n" +
                 "                        let moviePosterElement = document.getElementById('moviePoster');\n" +
-                "                        movieTitleElement.textContent = movieData.Title;\n" +
-                "                        moviePosterElement.src = movieData.Poster;\n" +
+                "                        movieTitleElement.textContent ="+ movieData+".Title;\n" +
+                "                        moviePosterElement.src = "+ movieData+".Poster;\n" +
                 "                        movieInfoElement.innerHTML = '';\n" +
-                "                        for (let key in movieData) {\n" +
-                "                            movieInfoElement.innerHTML += `<strong>${key}:</strong> ${movieData[key]}<br>`;\n" +
+                "                        for (let key in" + movieData+") {\n" +
+                "                            movieInfoElement.innerHTML += `<strong>${key}:</strong> ${" +movieData+"[key]}<br>`;\n" +
                 "                        }\n" +
-                "                    });\n" +
+                "                    }\n" +
+                "                xhttp.open(\"GET\", url;\n" +
+                "                xhttp.send();\n" +
                 "                }\n" +
                 "            </script>\n" +
                 "        </div>\n" +
