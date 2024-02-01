@@ -87,7 +87,7 @@ public class HttpServer {
                 return keyValue[1];
             }
         }
-        return null;
+        return "";
     }
 
 
@@ -120,7 +120,7 @@ public class HttpServer {
                 "                width: 80%;\n" +
                 "            }\n" +
                 "            #movieContainer {\n" +
-                "                display: flex;\n" +
+                "                display: none;\n" +
                 "                justify-content: space-between;\n" +
                 "                align-items: center;\n" +
                 "                padding: 20px;\n" +
@@ -172,8 +172,8 @@ public class HttpServer {
                 "                });\n" +
                 "                function loadMovieInfo() {\n" +
                 "                    let movieTitle = document.getElementById(\"movieTitle\").value;\n" +
-                "                    document.getElementById('movieContainer').style.display = 'flex';\n" +
-                "                    const url = \"http://localhost:35000/movie${movieTitle}\";\n" +
+                "                    document.getElementById(\"movieContainer\").style.display = flex;\n" +
+
                 "                    const xhttp = new XMLHttpRequest();\n" +
                 "                    xhttp.onload = function() {\n" +
                 "                        let movieTitleElement = document.getElementById('movieTitle');\n" +
@@ -186,6 +186,7 @@ public class HttpServer {
                 "                            movieInfoElement.innerHTML += `<strong>${key}:</strong> ${" +movieData+"[key]}<br>`;\n" +
                 "                        }\n" +
                 "                    }\n" +
+                "                    const url = \"http://localhost:35000/movie${movieTitle}\";\n" +
                 "                xhttp.open(\"GET\", url;\n" +
                 "                xhttp.send();\n" +
                 "                }\n" +
