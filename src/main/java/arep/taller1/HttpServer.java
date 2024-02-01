@@ -120,7 +120,7 @@ public class HttpServer {
                 "                width: 80%;\n" +
                 "            }\n" +
                 "            #movieContainer {\n" +
-                "                display: none;\n" +
+                "                display: flex;\n" +
                 "                justify-content: space-between;\n" +
                 "                align-items: center;\n" +
                 "                padding: 20px;\n" +
@@ -168,11 +168,12 @@ public class HttpServer {
                 "            <script>\n" +
                 "                document.getElementById('movieForm').addEventListener('submit', function(event) {\n" +
                 "                    event.preventDefault();\n" +
-                "                    document.getElementById('movieContainer').style.display = 'flex';\n" +
                 "                    loadMovieInfo();\n" +
                 "                });\n" +
                 "                function loadMovieInfo() {\n" +
                 "                    let movieTitle = document.getElementById(\"movieTitle\").value;\n" +
+                "                    document.getElementById(\"movieContainer\").style.display = 'flex';\n" +
+
                 "                    const xhttp = new XMLHttpRequest();\n" +
                 "                    xhttp.onload = function() {\n" +
                 "                        let movieTitleElement = document.getElementById('movieTitle');\n" +
@@ -186,7 +187,7 @@ public class HttpServer {
                 "                        }\n" +
                 "                    }\n" +
                 "                    const url = \"http://localhost:35000/movie${movieTitle}\";\n" +
-                "                xhttp.open(\"GET\", url);\n" +
+                "                xhttp.open(\"GET\", url;\n" +
                 "                xhttp.send();\n" +
                 "                }\n" +
                 "            </script>\n" +
